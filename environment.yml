@@ -1,0 +1,35 @@
+name: plaidoh_env
+channels:
+  - defaults
+dependencies:
+  - bzip2=1.0.8
+  - ca-certificates=2023.05.30
+  - libffi=3.4.4
+  - openssl=3.0.9
+  - pip=23.1.2
+  - python=3.10.11
+  - setuptools=67.8.0
+  - sqlite=3.41.2
+  - tk=8.6.12
+  - vc=14.2
+  - vs2015_runtime=14.27.29016
+  - wheel=0.38.4
+  - xz=5.4.2
+  - zlib=1.2.13
+  - pip:
+      - contourpy==1.1.0
+      - cycler==0.11.0
+      - fonttools==4.40.0
+      - kiwisolver==1.4.4
+      - matplotlib==3.7.2
+      - numpy==1.25.0
+      - packaging==23.1
+      - pandas==2.0.3
+      - pillow==10.0.0
+      - pyparsing==3.0.9
+      - python-dateutil==2.8.2
+      - pytz==2023.3
+      - seaborn==0.12.2
+      - six==1.16.0
+      - sklearn==0.0.post5
+      - tzdata==2023.3
