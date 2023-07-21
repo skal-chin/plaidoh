@@ -54,6 +54,7 @@ class Plaidoh:
             # visualizations : List = [],
             optimize : bool = False,
             preprocess_param : Dict = {},
+            column_dtypes : Dict = {},
             train_size : float = None,
             target_name : str = None,
             optimizer : AbstractOptimizer = None,
