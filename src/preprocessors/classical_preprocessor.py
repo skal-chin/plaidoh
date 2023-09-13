@@ -113,6 +113,7 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 		
 		generated_transformers = []
 
+
 		if preprocess_param is not None:
 			for column_name, transformers in preprocess_param.items():
 
@@ -192,6 +193,7 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 
 						generated_transformers.append((name, new_transformer, [column_name]))
 
+		generated_transformers.append((self.__target_column, 'passthrough', [self.__target_column]))
 		transformer = ColumnTransformer(generated_transformers, remainder='drop')
 		return transformer
 				
@@ -257,6 +259,7 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 		cleaned_data : pd.DataFrame
 			the cleaned data
 		"""
+		
 		pass
 
 	def __clean_outliers(self, data : pd.DataFrame = None) -> pd.DataFrame:
@@ -317,38 +320,6 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 		name = column_name + '_' + transformer_name
 
 		return name
-
-	def export_data(self, data : pd.DataFrame = None, export_path : str = None) -> None:
-		"""
-		exports the data to a csv file.
-
-		Parameters
-		----------
-		data : pd.DataFrame
-			the data to be exported
-		export_path : str
-			the path to export the data to
-
-		Returns
-		-------
-		None
-		"""
-		pass
-
-	def export_to_db(self, db_config : Dict = {}) -> None:
-		"""
-		exports the data to a database.
-
-		Parameters
-		----------
-		db_config : Dict
-			the configuration for the database
-
-		Returns
-		-------
-		None
-		"""
-		pass
 
 	def get_data(self) -> pd.DataFrame:
 		return self.__data
