@@ -124,7 +124,7 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 
 					if isinstance(transformer, str):
 
-						#TODO: add get transformer module
+						#TODO: add get transformer module that returns transformer from string name
 						new_transformer = get_transformer(transformer)
 
 					else:
@@ -336,5 +336,5 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 	def get_target_column(self) -> str:
 		return self.__target_column
 	
-	def get_pipeline(self) -> Dict:
-		return self.__pipeline
+	def get_transformer(self) -> ColumnTransformer:
+		return self.__transformer
