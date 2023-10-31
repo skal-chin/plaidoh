@@ -21,6 +21,7 @@ class ClassicalOptimizer(AbstractOptimizer):
                  data : pd.DataFrame = None,
                  target_column : str = None,
                  models : List = [],
+                 optimized_models : Dict = {},
                  ):
         pass
 
