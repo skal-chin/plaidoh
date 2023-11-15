@@ -74,53 +74,29 @@ class ClassicalModelFactory(AbstractModelFactory):
         else:
             raise ValueError('Invalid model name given.')
 
-    def get_model_params(self, models : List or str = None) -> Dict:
-        """
-        retrieves the hyperparameters for the given models
-
-        Parameters
-        ----------
-        models : List or str
-            List of models in string form or a singular string model.
-
-        Returns
-        -------
-        hyperparameters : Dict
-            Dictionary of hyperparameters for the given models.
-        """
-        hyperparameters = {}
-
-        if models is None:
-            return hyperparameters
-        
-        if isinstance(models, str):
-            model = models
-            model_hp = self.__get_model_hyperparameters(model)
-            hyperparameters[model] = model_hp
-
-            return hyperparameters
-        
-        for model in models:
-            model_hp = self.__get_model_hyperparameters(model)
-            hyperparameters[model] = model_hp
-
-        return hyperparameters
-
-
-    def __get_model_hyperparameters(self, model : str) -> Dict:
+    def get_model_params(self, model : str or List) -> Dict:
         """
         retrieves the hyperparameters for the given model
 
         Parameters
         ----------
-        model : str
+        model : str or List
             the model in string form
+            if given a list, it will return a dictionary of hyperparameters
 
         Returns
         -------
         hyperparameters : Dict
             Dictionary of hyperparameters for the given model.
         """
+
+        if isinstance(model, List):
+            model_params = {}
+
+            for m in model:
+                model_params[m] = self.get_model_params(m)
+
+            return model_params
 
         if model == 'random_forest_classifier':
             return {
@@ -230,3 +206,4 @@ class ClassicalModelFactory(AbstractModelFactory):
             }
         else:
             raise ValueError('Invalid model name given.')
+        
