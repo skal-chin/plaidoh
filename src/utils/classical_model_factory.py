@@ -1,15 +1,80 @@
-from abstract_hyperparameters_factory import AbstractHyperparametersFactory
+from abstract_model_factory import AbstractModelFactory
 
 from typing import (
     List,
     Dict,
 )
 
-class ClassicalHyperparametersFactory(AbstractHyperparametersFactory):
+from sklearn.ensemble import (
+    RandomForestClassifier,
+    RandomForestRegressor,
+    GradientBoostingClassifier,
+    GradientBoostingRegressor,
+)
+
+from sklearn.linear_model import (
+    LinearRegression,
+    LogisticRegression,
+)
+
+from sklearn.svm import (
+    SVC,
+    SVR,
+)
+
+from sklearn.neighbors import (
+    KNeighborsClassifier,
+)
+
+from sklearn.tree import (
+    DecisionTreeClassifier,
+    DecisionTreeRegressor,
+)
+
+class ClassicalModelFactory(AbstractModelFactory):
     def __init_(self):
         pass
 
-    def get_hyperparameters(self, models : List or str = None) -> Dict:
+    def get_model(self, model : str = None):
+        """
+        retrieves the model for the given model name
+
+        Parameters
+        ----------
+        model : str
+            the model in string form
+
+        Returns
+        -------
+        model : sklearn model
+            the model
+        """
+        if model == 'random_forest_classifier':
+            return RandomForestClassifier()
+        elif model == 'random_forest_regressor':
+            return RandomForestRegressor()
+        elif model == 'gradient_boosting_classifier':
+            return GradientBoostingClassifier()
+        elif model == 'gradient_boosting_regressor':
+            return GradientBoostingRegressor()
+        elif model == 'linear_regression':
+            return LinearRegression()
+        elif model == 'logistic_regression':
+            return LogisticRegression()
+        elif model == 'svc':
+            return SVC()
+        elif model == 'svr':
+            return SVR()
+        elif model == 'k_neighbors_classifier':
+            return KNeighborsClassifier()
+        elif model == 'decision_tree_classifier':
+            return DecisionTreeClassifier()
+        elif model == 'decision_tree_regressor':
+            return DecisionTreeRegressor()
+        else:
+            raise ValueError('Invalid model name given.')
+
+    def get_model_params(self, models : List or str = None) -> Dict:
         """
         retrieves the hyperparameters for the given models
 
