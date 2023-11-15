@@ -11,8 +11,8 @@ from typing import (
 	Tuple,
 )
 
-from types import (
-	FunctionType,
+from utils.transformer_factory import (
+	get_transformer,
 )
 
 from sklearn.preprocessing import (
@@ -31,14 +31,8 @@ from sklearn.impute import (
 	IterativeImputer,
 )
 
-from sklearn.pipeline import (
-	Pipeline,
-	make_pipeline,
-)
-
 from sklearn.compose import (
 	ColumnTransformer,
-	make_column_transformer,
 )
 
 class ClassicalPreprocessor(AbstractPreprocessor):
@@ -124,7 +118,6 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 
 					if isinstance(transformer, str):
 
-						#TODO: add get transformer module that returns transformer from string name
 						new_transformer = get_transformer(transformer)
 
 					else:
