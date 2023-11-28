@@ -43,6 +43,8 @@ from sklearn.tree import (
     DecisionTreeRegressor,
 )
 
+import mysql.connector
+
 class Plaidoh:
     def __init__(
             self,
@@ -54,6 +56,7 @@ class Plaidoh:
             # visualizations : List = [],
             optimize : bool = False,
             preprocess_param : Dict = {},
+            column_dtypes : Dict = {},
             train_size : float = None,
             target_name : str = None,
             optimizer : AbstractOptimizer = None,
@@ -179,6 +182,95 @@ class Plaidoh:
         @skal-chin
         """
         pass
+
+    def export_data(self, export_path : str = None) -> None:
+        """
+		exports the preprocessed data to a csv file.
+
+		Parameters
+		----------
+		export_path : str
+			the path to export the data to
+
+		Returns
+		-------
+		None
+		"""
+        data = self.preprocessor.get_preprocessed_data()
+        
+        if data is None:
+            raise ValueError("No data to export.")
+        
+        data.to_csv(export_path, index=False)
+        return
+
+    def export_data_to_db(self, db_config : Dict = {}) -> None:
+        """
+		exports the data to a database.
+
+		Parameters
+		----------
+		db_config : Dict
+			the configuration for the database as shown
+			{host : HOST_NAME,
+			user : USER_NAME,
+			password : PASSWORD,
+			db : DATABASE_NAME}
+
+		Returns
+		-------
+		None
+		"""
+        data = self.preprocessor.get_preprocessed_data()
+
+        if data is None:
+            raise ValueError("No data to export.")
+        
+        mydb = mysql.connector.connect(
+            host=db_config['host'],
+            user=db_config['user'],
+            password=db_config['password']
+        )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("CREATE DATABASE IF NOT EXISTS " + db_config['db'])
+
+        mydb = mysql.connector.connect(
+            host=db_config['host'],
+            user=db_config['user'],
+            password=db_config['password'],
+            database=db_config['db']
+        )
+
+        column_names = data.columns.values.tolist()
+        column_names = [column_name.replace(' ', '_') for column_name in column_names]
+        column_names = [column_name.replace('-', '_') for column_name in column_names]
+
+        column_types = data.dtypes.values.tolist()
+
+        for i in range(len(column_types)):
+            if column_types[i] == 'int64':
+                column_types[i] = 'INT'
+            elif column_types[i] == 'float64':
+                column_types[i] = 'FLOAT'
+            else:
+                column_types[i] = 'VARCHAR(255)'
+
+        column_names_and_types = [column_names[i] + ' ' + column_types[i] for i in range(len(column_names))]
+        column_names_and_types = ', '.join(column_names_and_types)
+
+        mycursor.execute("CREATE TABLE IF NOT EXISTS " + db_config['db'] + ".data (" + column_names_and_types + ")")
+
+        for i in range(len(data)):
+            row = data.iloc[i].values.tolist()
+            row = [str(value) for value in row]
+            row = ', '.join(row)
+            mycursor.execute("INSERT INTO " + db_config['db'] + ".data VALUES (" + row + ")")
+
+        mydb.commit()
+
+        return
 
     def export_models(self, models : List = [], path : str = None) -> None:
         """
