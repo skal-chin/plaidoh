@@ -35,11 +35,11 @@ from sklearn.compose import (
 	ColumnTransformer,
 )
 
-class ClassicalPreprocessor(AbstractPreprocessor):
+class TabularPreprocessor(AbstractPreprocessor):
 
 	__data = None
 	__target_column = None
-	__column_dtypes = {}
+	__column_preprocessor_types = {}
 	__preprocess_param = {}
 	__transformer = ColumnTransformer
 	__preprocessed_data = None
@@ -49,7 +49,7 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 			self,
 			data : pd.DataFrame = None,
 			target_column : str = None,
-			column_dtypes : Dict = {},
+			column_preprocessor_types : Dict = {},
 			preprocess_param : Dict = {},
 			):
 		
@@ -59,28 +59,28 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 		if data is not type(pd.DataFrame):
 			raise TypeError('data must be of type pd.DataFrame')
 		
-		if column_dtypes is None or preprocess_param is None:
-			raise Exception('column_dtypes or preprocess_param must be populated')
+		if column_preprocessor_types is None or preprocess_param is None:
+			raise Exception('column_preprocessor_types or preprocess_param must be populated')
 		
 		self.__data = data
 		self.__target_column = target_column
-		self.__column_dtypes = column_dtypes
+		self.__column_preprocessor_types = column_preprocessor_types
 		self.__preprocess_param = preprocess_param
 
-		self.__transformer = self.__build_transformer(self.__data, self.__column_dtypes, self.__preprocess_param)
+		self.__transformer = self.__build_transformer(self.__data, self.__column_preprocessor_types, self.__preprocess_param)
 		self.__preprocessed_data = self.__process_data(self.__data, self.__transformer)
 
-	def __build_transformer(self, data : pd.DataFrame = None, column_dtypes : Dict = {}, preprocess_param : Dict = {}) -> ColumnTransformer:
+	def __build_transformer(self, data : pd.DataFrame = None, column_preprocessor_types : Dict = {}, preprocess_param : Dict = {}) -> ColumnTransformer:
 		"""
 		builds the transformers for the given data. If both are not none, the function will use the 
-		preprocess_param first and then the column_dtypes. If a single column is used multiple times, 
+		preprocess_param first and then the column_preprocessor_types. If a single column is used multiple times, 
 		the transformers will be applied in the order they are given.
 
 		Parameters
 		----------
 		data : pd.DataFrame
 			the data to be processed
-		column_dtypes : Dict
+		column_preprocessor_types : Dict
 			the datatypes for each column, where the key is the column name and
 			the value is the column type in the form of nominal, ordinal, ratio, or interval
 			{COLUMN_NAME1 : ['nominal'], ..., COLUMN_NAMEn : ['interval']}.
@@ -102,8 +102,8 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 		transformers : ColumnTransformer
 			the transformers for the data
 		"""
-		if column_dtypes is None and preprocess_param is None:
-			raise Exception('Could not build a transformer. Provide either column_dtypes or preprocess_param')
+		if column_preprocessor_types is None and preprocess_param is None:
+			raise Exception('Could not build a transformer. Provide either column_preprocessor_types or preprocess_param')
 		
 		generated_transformers = []
 
@@ -127,8 +127,8 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 
 					generated_transformers.append((name, new_transformer, [column_name]))
 
-		if column_dtypes is not None:
-			for column_name, column_type in column_dtypes.items():
+		if column_preprocessor_types is not None:
+			for column_name, column_type in column_preprocessor_types.items():
 
 				if column_name not in data.columns:
 					continue
@@ -317,8 +317,8 @@ class ClassicalPreprocessor(AbstractPreprocessor):
 	def get_data(self) -> pd.DataFrame:
 		return self.__data
 	
-	def get_column_dtypes(self) -> Dict:
-		return self.__column_dtypes
+	def get_column_preprocessor_types(self) -> Dict:
+		return self.__column_preprocessor_types
 	
 	def get_preprocess_param(self) -> Dict:
 		return self.__preprocess_param

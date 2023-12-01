@@ -2,14 +2,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-from preprocessors.abstract_preprocessor import (
-    AbstractPreprocessor,
-)
-
-from optimizers.abstract_optimizer import (
-    AbstractOptimizer,
-)
+import preprocessors as prep
+import optimizers as opt
 
 from typing import (
     List,
@@ -46,21 +40,38 @@ from sklearn.tree import (
 import mysql.connector
 
 class Plaidoh:
+
+    __data : pd.DataFrame = None
+    __data_type : str = None
+    __target_type : str = None
+    __models : List = []
+    __model_metrics : List = []
+    # __analyses : List = []
+    # __visualizations : List = []
+    __optimize : bool = False
+    __preprocess_param : Dict = {}
+    __column_preprocessor_types : Dict = {}
+    __train_size : float = None
+    __target_name : str = None
+    __optimizer : opt.AbstractOptimizer = None
+    __preprocessor : prep.AbstractPreprocessor = None
+
     def __init__(
             self,
             data : pd.DataFrame or str = None,
-            model_type : str = 'classification',
-            models : List = [],
-            model_metrics : List = [],
+            data_type : str = 'tabular',
+            target_type : str = 'classification',
+            models : List = ['decision_tree_classifier'],
+            model_metrics : List = ['accuracy'],
             # analyses : List = [],
             # visualizations : List = [],
             optimize : bool = False,
             preprocess_param : Dict = {},
-            column_dtypes : Dict = {},
-            train_size : float = None,
+            column_preprocessor_types : Dict = {},
+            train_size : float = .8,
             target_name : str = None,
-            optimizer : AbstractOptimizer = None,
-            preprocessor : AbstractPreprocessor = None,
+            optimizer : opt.AbstractOptimizer = None,
+            preprocessor : prep.AbstractPreprocessor = None,
             ):
         pass
 

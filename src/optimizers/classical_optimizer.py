@@ -11,7 +11,7 @@ from typing import (
     Tuple,
 )
 
-from utils.model_utils import (
+from utils.classical_model_factory import (
     get_model,
     get_model_params,
 )
